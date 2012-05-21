@@ -1,0 +1,555 @@
+﻿<!--
+	@author Marcin Wawrzyniak (mailo)
+	@since 19-05-2012 
+-->
+<!DOCTYPE html>
+<html>
+  <head>
+	<title>PhalconPHP - The fastest PHP framework yet</title>
+	<meta charset='utf-8'>
+	<script src='./slides.js'></script>
+	 <style media="print">
+		 @page {
+			size: A4 landscape;
+			 @top-right {
+				content: "Page " counter(page);
+			 }
+		 }
+		  article {
+			page-break-after: always;
+			margin: auto;
+		  }
+		  article.next, article.past {
+			display: block;    
+		  }
+		  body {
+			  display: block !important;
+			  font-family: 'Open Sans', Arial, sans-serif;
+			  font-size: 1.5em;
+		  }
+		  .article{
+		page-brake-before:always;
+	}
+	</style>
+    <script type="text/javascript">
+	window.addEventListener('load', function(){
+		var link = document.getElementsByTagName('link');
+		link[link.length-1].setAttribute ("media","screen");
+	});
+	</script>
+  </head>
+  <style>
+	.slides.template-default > article:not(.nobackground):not(.biglogo) {
+	background-image: none !important;
+	}
+	.number{
+			width:50px;
+			text-align:right;
+			font-size:20px !important;
+			position:absolute;
+			bottom:10px;
+			right:20px;
+	}	  
+  </style>
+  <body style='display: none'>
+
+	<section class='slides layout-regular template-default'>
+	  <article>
+		<h1>
+		  Phalcon framework <br />
+		</h1>
+		<p>
+		 The fastest PHP framework yet 
+		</p>
+		<p style="font-size:12px;text-align:right;margin-top:300px;">Marcin Wawrzyniak</p>
+	  </article>
+	  
+	   <article>
+	  <h3>Roadmap</h3>
+		<ul>
+			<li>What's that?
+			<li>How to use it?
+			<li>Pros &amp; cons
+			<li>The end
+		</ul>
+		<p class="number">1/25</p>
+	  </article>
+
+	  <article>
+	  <h3>What's that ?</h3>
+		<br /> <br /> <p>one framework = one .dll (.so) file</p>
+		<ul>
+			<li>C extension for PHP5 </li>
+			<li>loosely coupled</li>
+			<li>MVC support</li>
+			<li>young</li>
+			<li>fast!</li>
+		</ul>
+		<p class="number">2/25</p>
+	  </article>
+
+	  <article class="smaller">
+		<h3>
+		  What features does it have?
+		</h3>
+		 <br />
+		<ul>
+			<li>ORM (high level)</li>
+			<li>Database classes (low level)</li>
+			<li>Filters / Validation</li>
+			<li>DB Migrations</li>
+			<li>Profiling / Logging</li>
+			<li>ACL</li>
+			<li>Cache</li>
+			<li>Internationalization</li>
+			<li>Pagination</li>
+			<li>HTML Helpers</li>
+			<li>CLI</li>
+		</ul>
+		
+		<p class="number">3/25</p>
+	  </article>
+	  
+	  <article class="smaller">
+	  	<h3>CakePHP has it all. Zend has it all. Why should I care?</h3>
+	  	<q>
+			Speed is the most important feature. 
+	  		If your application is slow, people won’t use it. 
+	  	</q>
+	  	<div class="author">
+			<a href="http://37signals.com/svn/posts/2280-speed-is-the-most-important-feature-if-your">Fred Wilson</a>
+	  	</div>
+		<p class="number">4/25</p>
+	  </article>
+	  
+	  <article>
+		<h3>Frameworks performance compared</h3>
+		<ul>
+			<li>using <a href="http://httpd.apache.org/docs/2.0/programs/ab.html">ab tool</a> (-n 1000 -c 5)
+			<li>specs: T4300@2.10GHz, 3,00GB, Win7, 5400RPM
+			<li>simple webapp to indentify minimum framework overhead
+			<li>performance varies not only because of framework optimization, but also framework complexity
+			<li>.php frameworks use APC Cache
+		</ul>
+		<p class="number">5/25</p>
+		</article>
+	  <article >
+		<h3>FASTER</h3>
+		<p>Benchmark of a few HelloWorld framework applications which tells us the minimum framework overhead.</p> 
+		<br /> <br />
+		<center><img src="http://chart.apis.google.com/chart?cht=bvg&chs=450x400&chd=s:F,I,O,Q,9&chdl=Zend|Kohana|CodeIgniter|Yii|Phalcon&chco=FFCC00,CCFF00,CCCCCC,3017ed,0a0a0a&chxt=y&chxs=0,000000,8,-1&chxr=0,0,370,50&chf=bg,s,FFFFFF|c,s,FFFFFF&chbh=a&chtt=Framework / Requests per second [more is better, apc enabled]&chts=000000,11&max=352&agent=hohli.com" alt="Chart build on http://charts.hohli.com" /></center>
+	  <p class="number">6/25</p>
+	  </article>
+	  
+	   <article class="smaller">
+		<br /><br /><br /><br /><center><img src="./images/wisners.png" /></center>
+		<p class="number">7/25</p>
+	  </article>
+	  
+	  <article>
+	  	<h3>How to use it ?</h3>
+		<ul>
+			<li> copy&amp;paste dll (or deploy .so) file
+			<li> update php.ini
+			<li> code
+			<li> deploy&amp;enjoy
+		</ul>
+		
+		<p class="number">8/25</p>
+	  </article>
+	  
+	  <article class="smaller">
+		<h3>
+		  Example model
+		</h3>
+		<p>Most often maps to a database table</p>
+	
+<pre class="prettyprint">
+class Article extends Phalcon_Model_Base {
+    function initialize(){
+        //table name, optional
+        $this->setSource("articles"); 
+        //many-to-many relation, through ArticleTags
+        $this->hasMany("id", "ArticleTags", "article_id"); 
+    }
+    function validation(){
+        $this->validate("InclusionIn", array(
+            "field" => "available_to",
+            "domain" => array("anyone", "registered", "premium")
+        ));
+        $this->validate("Uniqueness", array(
+            "field" => "title",
+            "message" => "The title must be unique"
+        ));
+        return !$this->validationHasFailed();
+    }
+}
+</pre>
+		<p class="number">9/25</p>
+	</article>
+	<article class="smaller">
+			<h3>Example model, more meat</h3>
+<pre class="prettyprint">
+class Tag extends Phalcon_Model_Base {
+    function initialize(){
+        //again many-to-many relation, through ArticleTags
+        $this->hasMany("id", "ArticleTags", "tag_id");
+    }
+}
+</pre>
+<p> Now let's put it all together.</p>
+<pre class="prettyprint">
+class ArticleTags extends Phalcon_Model_Base {
+    function initialize(){
+        $this->belongsTo("article_id", "Article", "id");
+        $this->belongsTo("tag_id", "Tag", "id");
+    }
+}
+</pre>
+<p class="number">10/25</p>
+</article>
+<article class="smaller">
+<h3>Using the model (basic) </h3>
+
+<pre class="prettyprint">
+//for_update sets exclusive lock on record 1694
+$article = Article::findFirst(array('id=1694', 'for_update' => true));
+$article->title = "True story about one cynical bastard";
+
+$premiumArticles = Article::find(array(
+    'available_to="premium', 
+    'order' => 'title', 
+    'limit' => 10
+));
+foreach($premiumArticles as $article){
+    echo $article->title . "\n";
+}
+foreach($article->getArticleTags() as $articleTag){ //'get' . $connectingModel
+    echo $articleTag->getTag()->name, "\n";
+}
+</pre>
+<p class="small">There's also a metadata which is used to retrieve model attribute names or types.</p>
+<pre>
+$article = new Article();
+$metaData = $article->getManager()->getMetaData();
+$attributes = $metaData->getAttributes($article);
+</pre>	
+<p class="number">11/25</p>	
+	  </article>
+	  
+	  <article class="smaller">
+<h3>Using the model (fun stuff)</h3>
+
+<pre class="prettyprint">
+try{
+    $transaction = Phalcon_Transaction_Manager::get();
+	
+    $article = new Article;
+    $article->setTransaction($transaction);
+    $article->title = 'Seen new Big Bang Theory?';
+	
+    if (false == $article->save()){
+      $transaction->rollback("Article is not saveable!");
+    }
+    
+    $tags = array('funny','outstanding','interesting','new');
+    foreach($tags as $name){
+        $tag = new Tag;
+        $tag->setTransaction($transaction);
+        $tag->name = $name;
+        if (false == $tag->save()){
+            $transaction->rollback('Cannot save tag: ' . $name);
+        }
+    }
+
+    $transaction->commit();
+  
+}catch(Phalcon_Transaction_Failed $e){ /* ... */ }
+</pre>
+<p class="number">12/25</p>		
+	  </article>
+	<article class="smaller">
+<h3>Tag helper</h3>
+<p>Phalcon_Tag allows you to deal with HTML markup complexities.</p>   
+<p>In the controller</p>
+<pre class="prettyprint">
+use Phalcon_Tag as Tag;
+//...
+public function addAction(){
+	//sets the default value of &lt;input name="born" /&gt;
+	Tag::setDefault('born', date('d-m-y', strtotime('20 years ago'));
+}
+</pre>
+<p>In the view</p>
+<pre class="prettyprint">
+echo Tag::form(array('users/register', 'method' => 'post'));
+echo Tag::textField(array('born', 'size'=>30));
+echo Tag::select(array(
+    'category_id',
+    Categories::find('disabled=0'),
+    'using' => array('id', 'name')
+));
+echo Tag::image(array('img/logo.png'));
+echo Tag::linkTo('users/register', 'Join us!');
+echo Tag::stylesheetLink('css/style.css');
+</pre>
+<p></p>
+<p class="number">13/25</p>
+</article>
+	<article class="smaller">
+<h3>Pagination</h3>
+<p>In the controller</p>
+<pre class="prettyprint">
+$news = News::find();
+$paginator = Phalcon_Paginator::factory("Model", array(
+  "data" => $news,
+  "limit"=> 10,
+  "page" => $numberPage
+));
+</pre>
+<p>In the view</p>
+<pre class="prettyprint">
+&lt;?php
+foreach($page->items as $item):
+    //...
+endforeach;
+?&gt;
+
+&lt;?= Phalcon_Tag::linkTo('news/index?page=' . $page->before, 'Previous') ?&gt;
+&lt;?= Phalcon_Tag::linkTo('news/index?page=' . $page->next, 'Next') ?&gt;
+
+&lt;?= 'You are in page ' . $page->current . ' of ' . $page->total_pages ?&gt;
+</pre>
+<p class="number">14/25</p>
+</article>
+
+<article class="smaller">
+<h3>Translating your app with i18n/l10n</h3>
+<p> Phalcon uses <a href="http://pecl.php.net/package/intl">intl</a> extension (yes I can spell internationalization).</p>
+
+
+<pre class="prettyprint">
+$locale = 'en_US';
+$formatter = new NumberFormatter($locale, NumberFormatter::DECIMAL);
+
+echo $formatter->format(4560.50);
+
+
+$mf = new MessageFormatter($locale, 
+	"{0,choice,0#No new messages|
+	  1#One new message|
+	  1&lt;You've got {0,number} new messages}."
+);
+echo $mf->format(7); //You've got 7 new messages
+</pre>
+<p class="number">15/25</p>
+</article>
+
+<article class="smaller">
+<h3>Migrations</h3>
+<p>smart migration based on serialized database schema (phalcon-developer-tools)</p>
+
+<p class="blue"></p>
+<pre class="prettyprint">
+phalcon gen-migration //generate new migration
+phalcon gen-migration --version 101 //switch to 101
+</pre>
+<img style="float:left;margin-right:20px;" src="./images/sublime-migrations.png" />
+<pre class="prettyprint">
+use Phalcon_Db_Column as Column;
+class CompaniesMigration_100 extends Phalcon_Model_Migration {
+    public function up(){
+        $this->morphTable('companies', array(
+        'columns' => array(
+            new Column('id', array(
+            'type' => Column::TYPE_INTEGER,
+            'size' => 10,
+            'unsigned' => true,
+            'primary' => true,
+            'notNull' => true,
+            'autoIncrement' => true,
+            'first' => true
+        )),
+        //...
+    }
+}
+</pre>
+<p class="number">16/25</p>
+</article>
+<article class="smaller">
+<h3>Fixtures</h3>
+<p>Fixtures are just test data, which can be inserted to DB after migration.</p>
+<pre class="prettyprint">
+class CompaniesMigration_100 extends Phalcon_Model_Migration {
+  public function up(){
+	//...
+	self::$_connection->insert(
+	   "companies",
+	   array("Microsoft", "Bill Gates, Paul Allen"),
+	   array("Apple", "Steve Jobs, Steve Wozniak"),
+	   array("name", "founders")
+	);
+  }
+
+}
+</pre>
+<p class="number">17/25</p>
+</article>
+	<article class="smaller">
+		<h3>
+		 But I'm lazy!!
+		</h3>
+		<p>Since Phalcon 0.3.2 there's a new nifty feature called "developer tools".</p>
+<pre class="prettyprint">
+phalcon create-project candy-shop
+phalcon create-controller --name User
+phalcon create-model --table-name users
+phalcon create-model --table-name users --gen-getters-setters
+phalcon scaffold --table-name users
+phalcon create-all-models
+phalcon gen-migration
+</pre>
+<p>create-model allows you to modify database table between code generations (next code generation will not remove your code, just modify needed parts).</p>
+
+<pre class="prettyprint">
+CREATE TABLE users(
+  id int,
+  name varchar(255)
+);
+</pre>
+<pre class="prettyprint">
+phalcon create-model --table-name users
+</pre>
+<p class="number">18/25</p>
+</article>
+	<article class="smaller">
+		<h3>
+		 But I'm really lazy!!
+		</h3>
+		<p>When we alter the table.. </p>
+<pre class="prettyprint">
+ALTER TABLE users ADD email varchar(255);
+</pre>
+<p> and rerun create-model..</p>
+<pre class="prettyprint">
+phalcon create-model --table-name users --force 
+</pre>
+<p>Phalcon will modify previously created class without touching code you've modified.</p>
+		
+		<p class="number">19/25</p>
+	  </article>
+	  <article class="smaller">
+<h3>Drawbacks</h3>
+<ul>
+	<li>young
+	<li>don't use it for mission critical apps. yet.
+	<li>no DI (Symfony anyone?)
+	<li>limited feature set
+	<li>hard to debug
+	<li>code completion is tricky - even in your beloved PHPStorm (need to use <a href="http://phalcon.uservoice.com/forums/154026-general/suggestions/2724445-code-completion-to-major-ide-s-based-on-stub-files">stub</a> files)
+</ul>
+<p class="number">20/25</p>
+</article>
+
+<article class="smaller">
+<h3>But you should really try it out, because:</h3>
+<ul>
+	<li>innovative approach to PHP frameworks
+	<li>fastest PHP framework yet
+	<li>easy to learn
+	<li>fast and easy installation
+	<li>phalcon developer tools (CLI)
+	<li>complete documentation
+</ul>
+<p class="number">21/25</p>
+</article>
+
+	  <article class='smaller'>
+		<h3>
+		  And it get's better...
+		</h3>
+		<ul>
+		<li>2 days ago web interface for code generation was released
+		<li>
+		2 days ago Phalcon <span class="red">0.4.0 alpha</span> was released (relatively up to 60% faster in some cases)
+		</li>
+		</ul>
+		
+		<ul>
+	
+		<li>What's planned for <strong>0.4.0</strong>:<br />
+		<ul>
+			<li>Caching of result-sets with Memcached (ORM)
+			<li>Virtual foreign keys (ORM)
+			<li>A router adapter based in regular expressions 
+			<li>Persistent storage of models meta-data (ORM)
+			<li>Support for PostgreSQL (DB)
+		</ul>
+		</ul>
+		<p class="number">22/25</p>
+		</article>
+		
+		
+	  <article class='smaller'>
+		<h3>
+		  That's it.
+		</h3>
+		<p>Thanks for your attention!</p>
+		<p class="blue">Questions?</p>
+		<br />
+		<center><img src="./images/jacksonPulp.jpg" style="max-width:800px;"/></center>
+		<p class="number">23/25</p>
+	  </article>
+	  <article class='smaller'>
+		<h3>
+		  Useful links
+		</h3>
+		<ul>
+			<li><a href="http://phalconphp.com">PhalconPHP</a>
+			<li><a href="http://phalconphp.com/documentation">PhalconPHP docs</a>
+			<li><a href="http://phalconphp.com/api">PhalconPHP api</a>
+			<li>About PHP C Extensions anatomy:</li>
+			<li><ul>
+			<li><a href="http://devzone.zend.com/303/extension-writing-part-i-introduction-to-php-and-zend/">Extension Writing Part I: Introduction to PHP and Zend</a>
+			<li><a href="http://devzone.zend.com/1435/wrapping-c-classes-in-a-php-extension/">Wrapping C++ Classes in a PHP Extension</a>
+			</ul>
+			</li>
+		</ul>
+		<p class="number">24/25</p>
+	  </article>
+	  
+	  <article class='smaller'>
+		<h3>
+		  Bonus: Q&amp;A after speech
+		</h3>
+		<p>
+		<b>Q: What do you think about Phalcon future?</b> <br />
+		A: I believe that as far as Phalcon is a great project itself, it's mission is rather to spread a brand new technical tought than become a new ZF.
+		</p>
+		<p>
+		<b>Q: Does Phalcon use PDO?</b> <br />
+		A:  <i>"From PDO to native drivers, Phalcon encapsulate the specific details of each database engine in dialects. Those provide common functions and SQL generator to adapters."</i><br /> ATM of writing, there's only MySQL dialect availble, which doesn't mean you cannot use PDO or <a href="http://php.net/manual/en/book.mongo.php">mongo</a> while developing in Phalcon.
+		
+		</p>
+		<p><b>Q: Do you know ANY project that switched to Phalcon in order to improve performance?</b> <br />
+		A: Why don't you read the drawbacks slide?
+		</p>
+		
+		<p><b>Q: Can you use SQLite with Phalcon?</b> <br />
+		A: Yes you can, using PDO_SQLITE, as Phalcon does not provide yet Phalcon_Db_Dialect_Sqlite class. 
+		</p>
+		<p>
+		<b>Q: Does Phalcon use under the hood PDO ex. in  Phalcon_Db_Dialect_Mysql?</b> <br />
+		A: As since PHP 5.4 there's mysqlnd under the hood, Phalcon uses <a href="http://dev.mysql.com/doc/refman/5.5/en/apis-php-mysql.html">mysql</a> extension.
+		</p>
+		
+		<p><b>Q: What versions of PHP does Phalcon support?</b><br />
+		A: >=5.3
+		</p>
+		<p class="number">25/25</p>
+	  </article>
+
+	</section>
+
+  </body>
+</html>
